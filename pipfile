@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+uvicorn = "*"
+pydantic = "*"
+sqlalchemy = "*"
+pymysql = "*"  
+scikit-learn = "*"
+lightfm = "*"  # LightFM 추가
+scipy = "*"    # LightFM 의존성
+pandas = "*"
+python-dotenv = "*"  # dotenv 수정
+geopy = "*"   
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"

@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+lightfm
+pydantic
+numpy
+scipy
+pandas
+sqlalchemy
+python-multipart
+python-dotenv
+pymysql
+geopy
