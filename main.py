@@ -87,6 +87,7 @@ def recommend_content(user_id: int, db: Session = Depends(get_db)):
         )
     
     except Exception as e:
+        db.rollback()
         import traceback
         traceback.print_exc()
         raise HTTPException(
