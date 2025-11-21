@@ -6,7 +6,6 @@ from unittest.mock import MagicMock
 from utils.recommender import LightFMRecommender
 from models.db_models import User, Content, UserContentLikes, Category, ContentCategory, UserCategory
 
-
 class FakeQuery:
     """SQLAlchemy의 .query().filter().all() 체인을 흉내내기 위한 Mock Query 객체"""
     def __init__(self, data):
@@ -18,10 +17,22 @@ class FakeQuery:
             return list(filter(self._filter_fn, self.data))
         return self.data
 
-    def filter(self, fn):
-        self._filter_fn = lambda obj: fn(obj)
-        return self
+    def filter(self, expr):
+        if hasattr(expr, "left") and hasattr(expr, "right"):
+            left = expr.left.key
+            right = expr.right.value
 
+            def fn(obj):
+                return getattr(obj, left) == right
+
+            self._filter_fn = fn
+            return self
+        
+        if callable(expr):
+            self._filter_fn = expr
+            return self
+
+        raise TypeError("Unsupported filter expression type")
 
 class FakeDBSession:
     """SQLAlchemy Session을 흉내내는 Fake Session"""
