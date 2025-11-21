@@ -17,6 +17,7 @@ RUN pip install -r requirements.txt
 RUN pip install lightfm
 
 RUN pip install pytest
+ENV PYTHONPATH="/app"
 
 # 소스 복사
 COPY . /app

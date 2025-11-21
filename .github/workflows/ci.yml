@@ -27,4 +27,4 @@ jobs:
         run: docker build -t rec-test .
 
       - name: Run tests in Docker
-        run: docker run rec-test pytest
+        run: docker run -e PYTHONPATH=/app rec-test pytest
