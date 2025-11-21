@@ -10,3 +10,4 @@ python-multipart
 python-dotenv
 pymysql
 geopy
+pytest

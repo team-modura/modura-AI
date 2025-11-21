@@ -16,6 +16,8 @@ RUN pip install -r requirements.txt
 # LightFM 은 pip로도 충분하지만 conda 없이 설치하도록
 RUN pip install lightfm
 
+RUN pip install pytest
+
 # 소스 복사
 COPY . /app
 
