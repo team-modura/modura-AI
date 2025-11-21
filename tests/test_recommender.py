@@ -3,7 +3,7 @@
 import pytest
 from unittest.mock import MagicMock
 
-from recommender import LightFMRecommender
+from utils.recommender import LightFMRecommender
 from models.db_models import User, Content, UserContentLikes, Category, ContentCategory, UserCategory
 
 
