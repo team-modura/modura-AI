@@ -20,18 +20,11 @@ jobs:
           DOTENV_FILE: ${{ secrets.DOTENV_FILE }}
         run: echo "$DOTENV_FILE" > .env
 
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential gcc g++ python3-dev
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.8"
+      - name: Build Docker image
+        run: docker build -t rec-test .
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run tests
-        run: pytest
+      - name: Run tests in Docker
+        run: docker run rec-test pytest
