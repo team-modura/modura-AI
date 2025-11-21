@@ -37,4 +37,10 @@ jobs:
             docker stop modura-ai || true
             docker rm modura-ai || true
             docker pull ${{ secrets.DOCKER_USERNAME }}/modura-ai:latest
-            docker run -d -p 8000:8000 --name modura-ai ${{ secrets.DOCKER_USERNAME }}/modura-ai:latest
+            docker run -d -p 8000:8000 --name modura-ai \
+              -e DB_HOST=${{ secrets.DB_HOST }} \
+              -e DB_PORT=${{ secrets.DB_PORT }} \
+              -e DB_USER=${{ secrets.DB_USER }} \
+              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              -e DB_NAME=${{ secrets.DB_NAME }} \
+              ${{ secrets.DOCKER_USERNAME }}/modura-ai:latest
