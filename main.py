@@ -1,7 +1,7 @@
 from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy.orm import Session
 from utils.database import get_db, engine
-from models.db_models import Base, User, Content
+from models.db_models import Base, User, Content, UserContentLikes
 from models.models import RecommendationResponse, ContentRecommendation
 from utils.recommender import LightFMRecommender
 
@@ -63,6 +63,10 @@ def recommend_content(user_id: int, db: Session = Depends(get_db)):
             n_recommendations=10
         )
         
+        liked_content_ids = set(
+            row.content_id
+            for row in db.query(UserContentLikes).filter(UserContentLikes.user_id == user_id).all()
+        )
         # 컨텐츠 정보 조회 및 응답 생성
         result = []
         for rec in recommendations:
@@ -71,6 +75,7 @@ def recommend_content(user_id: int, db: Session = Depends(get_db)):
                 result.append(ContentRecommendation(
                     id=content.id,
                     name=content.title_kr,
+                    isLiked=content.id in liked_content_ids,
                     thumbnail=content.thumbnail,
                     score=rec['score'],
                     cf_score=rec['cf_score'],

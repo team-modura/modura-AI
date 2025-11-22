@@ -293,6 +293,7 @@ class ContentRecommendation(BaseModel):
     """추천 결과의 컨텐츠 정보"""
     id: int
     name: str
+    isLiked: Optional[bool] = None
     thumbnail: Optional[str] = None
     score: Optional[float] = None  # 추천 점수
     cf_score: Optional[float] = None
