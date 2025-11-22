@@ -36,7 +36,7 @@ def health_check():
         "recommender_ready": recommender is not None and recommender.model is not None
     }
 
-@app.get('/recommend/content/{user_id}', response_model=RecommendationResponse)
+@app.get('/recommend/contents/{user_id}', response_model=RecommendationResponse)
 def recommend_content(user_id: int, db: Session = Depends(get_db)):
     """
     특정 사용자에게 컨텐츠 추천
