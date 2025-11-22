@@ -211,13 +211,18 @@ class LightFMRecommender:
             .filter(UserCategory.user_id == user_id).all()
         user_cat_set = {cat[0] for cat in user_categories}
         
-        if not user_cat_set:
-            return 0.0
-        
         # 컨텐츠 장르
         content_categories = self.db.query(ContentCategory.category_id)\
             .filter(ContentCategory.content_id == content_id).all()
         content_cat_set = {cat[0] for cat in content_categories}
+        
+        print("DEBUG GENRE → user:", user_id,
+          "user_cat:", user_cat_set,
+          "content:", content_id,
+          "content_cat:", content_cat_set)
+
+        if not user_cat_set:
+            return 0.0
         
         if not content_cat_set:
             return 0.0
@@ -239,8 +244,7 @@ class LightFMRecommender:
             return 0.0
         
         user_coords = geocode(user.address)
-        print("DEBUG USER ADDRESS:", user.address, "->", user_coords)
-
+        
         if not user_coords:
             return 0.0
         
@@ -289,7 +293,7 @@ class LightFMRecommender:
         하이브리드 추천: CF + 장르 + 거리
         """
         # 1. CF 점수 (LightFM 예측)
-        cf_recommendations = self.predict_for_user(user_id, n_items=50)
+        cf_recommendations = self.predict_for_user(user_id, n_items=500)
         
         if not cf_recommendations:
             print(f"No CF recommendations for user {user_id}")
