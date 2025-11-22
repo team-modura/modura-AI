@@ -239,6 +239,8 @@ class LightFMRecommender:
             return 0.0
         
         user_coords = geocode(user.address)
+        print("DEBUG USER ADDRESS:", user.address, "->", user_coords)
+
         if not user_coords:
             return 0.0
         
