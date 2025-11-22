@@ -88,7 +88,7 @@ class Place(Base):
     """
     촬영 장소 테이블
     """
-    __tablename__ = "places"
+    __tablename__ = "place"
     
     id = Column(BigInteger, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
@@ -108,7 +108,7 @@ class ContentPlace(Base):
     
     id = Column(BigInteger, primary_key=True, index=True)
     content_id = Column(BigInteger, ForeignKey("content.id"), index=True, nullable=False)
-    place_id = Column(BigInteger, ForeignKey("places.id"), index=True, nullable=False)
+    place_id = Column(BigInteger, ForeignKey("place.id"), index=True, nullable=False)
     
     # 관계
     content = relationship("Content", back_populates="places")
@@ -138,7 +138,7 @@ class UserPlaceLikes(Base):
     
     id = Column(BigInteger, primary_key=True, index=True)
     user_id = Column(BigInteger, ForeignKey("users.id"), index=True, nullable=False)
-    place_id = Column(BigInteger, ForeignKey("places.id"), index=True, nullable=False)
+    place_id = Column(BigInteger, ForeignKey("place.id"), index=True, nullable=False)
     
     # 관계
     user = relationship("User", back_populates="place_likes")
