@@ -56,8 +56,8 @@ def mock_db():
 
     # Contents
     contents = [
-        Content(id=10, title_kr="Movie A", title_eng="Movie A", year=2010, type="movie"),
-        Content(id=20, title_kr="Movie B", title_eng="Movie B", year=2020, type="movie"),
+        Content(id=10, name="Movie A", type="movie"),
+        Content(id=20, name="Movie B", type="movie"),
     ]
 
     # Likes

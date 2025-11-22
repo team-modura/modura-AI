@@ -99,11 +99,6 @@ class LightFMRecommender:
                 cat_name = self.category_cache.get(cc.category_id, f"cat_{cc.category_id}")
                 features.append(f"genre:{cat_name}")
             
-            # 제작 연도 구간 (10년 단위)
-            if content.year:
-                decade = (content.year // 10) * 10
-                features.append(f"decade:{decade}s")
-            
             item_features_dict[content.id] = features
         
         # 5. 모든 특성 수집
@@ -340,9 +335,6 @@ class LightFMRecommender:
         
         return {
             'id': content.id,
-            'title_kr': content.title_kr,
-            'title_eng': content.title_eng,
-            'year': content.year,
             'genres': genre_names,
             'type': content.type
         }

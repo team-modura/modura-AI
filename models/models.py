@@ -291,11 +291,9 @@ class CategoryResponse(BaseModel):
 
 class ContentRecommendation(BaseModel):
     """추천 결과의 컨텐츠 정보"""
-    content_id: int
-    title_kr: str
-    title_eng: Optional[str] = None
+    id: int
+    name: str
     thumbnail: Optional[str] = None
-    year: Optional[int] = None
     score: Optional[float] = None  # 추천 점수
     cf_score: Optional[float] = None
     genre_score: Optional[float] = None
@@ -306,6 +304,6 @@ class RecommendationRequest(BaseModel):
     user_id: int
 
 class RecommendationResponse(BaseModel):
-    recommended_contents: List[ContentRecommendation]
+    placeList: List[ContentRecommendation]
 
 

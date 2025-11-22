@@ -69,11 +69,9 @@ def recommend_content(user_id: int, db: Session = Depends(get_db)):
             content = db.query(Content).filter(Content.id == rec['content_id']).first()
             if content:
                 result.append(ContentRecommendation(
-                    content_id=content.id,
-                    title_kr=content.title_kr,
-                    title_eng=content.title_eng,
+                    id=content.id,
+                    name=content.name,
                     thumbnail=content.thumbnail,
-                    year=content.year,
                     score=rec['score'],
                     cf_score=rec['cf_score'],
                     genre_score=rec['genre_score'],
@@ -82,7 +80,7 @@ def recommend_content(user_id: int, db: Session = Depends(get_db)):
         
         return RecommendationResponse(
             user_id=user_id,
-            recommended_contents=result,
+            placeList=result,
             total_count=len(result)
         )
     
