@@ -8,6 +8,7 @@ from lightfm.data import Dataset
 from scipy.sparse import csr_matrix
 from sqlalchemy.orm import Session
 from geopy.distance import geodesic
+import math
 
 from models.db_models import Category, ContentCategory, ContentPlace, Place, User, UserContentLikes, UserPlaceLikes, Content, UserCategory
 from models.models import LocationEnum
@@ -261,15 +262,25 @@ class LightFMRecommender:
         if min_distance == float('inf'):
             return 0.0
         
+        d = min_distance
+
+        if d <= 300:
+          score = 1 - (d / 300)
+
+        elif d <= 1000:
+          score = math.exp(-(d - 300) / 700)
+
+        else:
+          score = 0.1
         # 거리를 점수로 변환 (100km 이내는 선형, 그 이상은 0)
-        return distance_to_score(min_distance, max_distance=100.0)
+        return float(score)
     
     def get_hybrid_recommendations(
         self, 
         user_id: int, 
         n_recommendations: int = 10,
-        cf_weight: float = 0.6,
-        genre_weight: float = 0.25,
+        cf_weight: float = 0.25,
+        genre_weight: float = 0.6,
         distance_weight: float = 0.15
     ) -> List[Dict]:
         """
