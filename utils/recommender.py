@@ -262,7 +262,7 @@ class LightFMRecommender:
             return 0.0
         return distance_to_score(min_distance)
 
-    def get_genre_candidates(self, user_id: int, top_k: int = 200) -> List[int]:
+    def get_genre_candidates(self, user_id: int, top_k: int = 100) -> List[int]:
         """
         장르 기반 후보군 (user 선호 장르와 겹치는 컨텐츠들 중 상위 top_k)
         """
@@ -292,7 +292,7 @@ class LightFMRecommender:
 
         return [cid for cid, _ in scored[:top_k]]
 
-    def get_distance_candidates(self, user_id: int, top_k: int = 200) -> List[int]:
+    def get_distance_candidates(self, user_id: int, top_k: int = 100) -> List[int]:
         """
         거리 기반 후보군 (사용자와 가까운 촬영지의 컨텐츠 상위 top_k)
         """
@@ -347,9 +347,9 @@ class LightFMRecommender:
         cf_weight: float = 0.25,
         genre_weight: float = 0.60,
         distance_weight: float = 0.15,
-        cf_top_k: int = 200,
-        genre_top_k: int = 200,
-        distance_top_k: int = 200,
+        cf_top_k: int = 100,
+        genre_top_k: int = 100,
+        distance_top_k: int = 100,
     ) -> List[Dict]:
         """
         1차 필터링:
