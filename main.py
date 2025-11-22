@@ -76,11 +76,7 @@ def recommend_content(user_id: int, db: Session = Depends(get_db)):
                     id=content.id,
                     name=content.title_kr,
                     isLiked=content.id in liked_content_ids,
-                    thumbnail=content.thumbnail,
-                    score=rec['score'],
-                    cf_score=rec['cf_score'],
-                    genre_score=rec['genre_score'],
-                    distance_score=rec['distance_score']
+                    thumbnail=content.thumbnail
                 ))
         
         return RecommendationResponse(

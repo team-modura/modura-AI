@@ -295,10 +295,6 @@ class ContentRecommendation(BaseModel):
     name: str
     isLiked: Optional[bool] = None
     thumbnail: Optional[str] = None
-    score: Optional[float] = None  # 추천 점수
-    cf_score: Optional[float] = None
-    genre_score: Optional[float] = None
-    distance_score: Optional[float] = None
 
 
 class RecommendationRequest(BaseModel):
