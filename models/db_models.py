@@ -56,7 +56,7 @@ class Content(Base):
     __tablename__ = "content"
     
     id = Column(BigInteger, primary_key=True, index=True)
-    name = Column(String(255), nullable=False)
+    title_kr = Column(String(255), nullable=False)
     plot = Column(Text, nullable=True)
     thumbnail = Column(Text, nullable=True)
     type = Column(Integer, nullable=False)  # 0: 영화, 1: TV 등

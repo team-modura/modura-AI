@@ -70,7 +70,7 @@ def recommend_content(user_id: int, db: Session = Depends(get_db)):
             if content:
                 result.append(ContentRecommendation(
                     id=content.id,
-                    name=content.name,
+                    name=content.title_kr,
                     thumbnail=content.thumbnail,
                     score=rec['score'],
                     cf_score=rec['cf_score'],
