@@ -210,7 +210,7 @@ def recommend_by_location(
         
         rating_rows = (db.query(
                 PlaceReviews.place_id,
-                func.avg(PlaceReviews.rating).label('avg_rating'),
+                func.round(func.avg(PlaceReviews.rating), 1).label('avg_rating'),
                 func.count(PlaceReviews.id).label('review_count')
             )
             .filter(PlaceReviews.place_id.in_(top_place_ids))
