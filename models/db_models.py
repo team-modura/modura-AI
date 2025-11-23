@@ -1,7 +1,7 @@
 # models/db_models.py
 
-from sqlalchemy import Column,BigInteger, Integer, String, DateTime, ForeignKey, Float, Date, Text
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column,BigInteger, Integer, String, DateTime, ForeignKey, Float, Date, Text, func
+from sqlalchemy.orm import relationship, Session
 
 from utils.database import Base
 
@@ -143,3 +143,20 @@ class UserPlaceLikes(Base):
     # 관계
     user = relationship("User", back_populates="place_likes")
     place = relationship("Place", back_populates="likes")
+
+class PlaceReviews(Base):
+    """
+    장소 리뷰 테이블
+    """
+    __tablename__ = "place_review"
+    
+    id = Column(BigInteger, primary_key=True, index=True)
+    user_id = Column(BigInteger, ForeignKey("users.id"), index=True, nullable=False)
+    place_id = Column(BigInteger, ForeignKey("place.id"), index=True, nullable=False)
+    body = Column(Text, nullable=True)
+    rating = Column(Float, nullable=False)
+    created_at = Column(DateTime, nullable=False)
+    
+    # 관계
+    user = relationship("User")
+    place = relationship("Place")

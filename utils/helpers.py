@@ -48,19 +48,11 @@ def geocode(address: str) -> Optional[Tuple[float, float]]:
 def calculate_distance(coord1: Tuple[float, float], coord2: Tuple[float, float]) -> float:
     """
     두 좌표 간 거리 계산 (km)
-    
     Args:
         coord1: (위도, 경도)
         coord2: (위도, 경도)
-    
     Returns:
         거리 (킬로미터)
-    
-    Example:
-        >>> coord1 = (37.5665, 126.9780)  # 서울시청
-        >>> coord2 = (37.4563, 126.7052)  # 인천시청
-        >>> calculate_distance(coord1, coord2)
-        28.4  # km
     """
     try:
         return geodesic(coord1, coord2).kilometers

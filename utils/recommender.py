@@ -18,7 +18,6 @@ from models.db_models import (
     Content,
     UserCategory
 )
-from models.models import LocationEnum
 from utils.helpers import calculate_distance, distance_to_score, geocode
 
 
@@ -350,6 +349,7 @@ class LightFMRecommender:
         cf_top_k: int = 100,
         genre_top_k: int = 100,
         distance_top_k: int = 100,
+        include_liked_info: bool = False,
     ) -> List[Dict]:
         """
         1차 필터링:
@@ -391,6 +391,16 @@ class LightFMRecommender:
 
         final_scores: List[Dict] = []
 
+        liked_ids = set()
+        if include_liked_info:
+            liked_items = (
+                self.db.query(UserContentLikes.content_id)
+                .filter(UserContentLikes.user_id == user_id)
+                .all()
+            )
+            liked_ids = {item[0] for item in liked_items}
+    
+
         for content_id in candidate_ids:
             normalized_cf = get_normalized_cf(content_id)
             genre_score = self.calculate_genre_score(user_id, content_id)
@@ -402,15 +412,18 @@ class LightFMRecommender:
                 + distance_weight * distance_score
             )
 
-            final_scores.append(
-                {
-                    "content_id": content_id,
-                    "score": final_score,
-                    "cf_score": float(cf_score_raw.get(content_id, 0.0)),
-                    "genre_score": genre_score,
-                    "distance_score": distance_score,
-                }
-            )
+            result = {
+                "content_id": content_id,
+                "score": final_score,
+                "cf_score": float(cf_score_raw.get(content_id, 0.0)),
+                "genre_score": genre_score,
+                "distance_score": distance_score,
+            }
+
+            if include_liked_info:
+                result["is_liked"] = content_id in liked_ids
+        
+            final_scores.append(result)
 
         # 최종 점수로 정렬
         final_scores.sort(key=lambda x: x["score"], reverse=True)
