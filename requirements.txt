@@ -11,3 +11,5 @@ python-dotenv
 pymysql
 geopy
 pytest
+boto3
+botocore

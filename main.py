@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from fastapi import Depends, FastAPI, HTTPException, Query, status
 from utils.helpers import distance_to_score, geocode
 from utils.place_recommender import PlaceCFRecommender, batch_distance
@@ -9,6 +9,7 @@ from models.db_models import Base, User, Content, UserContentLikes, UserPlaceLik
 from models.models import RecommendationResponse, ContentRecommendation, MapRecommendationResponse, PlaceRecommendation
 from utils.recommender import LightFMRecommender
 import numpy as np
+from utils.s3_service import s3_service
 
 # 테이블 생성 (최초 1회만 실행)
 Base.metadata.create_all(bind=engine)
@@ -160,8 +161,7 @@ def recommend_by_location(
 
         cf_candidates = place_recommender.get_cf_candidates(
             user_id, 
-            top_k=100,
-            exclude_place_ids=liked_place_ids
+            top_k=100
         )
 
         places = db.query(Place).filter(
@@ -220,6 +220,10 @@ def recommend_by_location(
         place_stats = {pid: (avg or 0.0, cnt or 0) for pid, avg, cnt in rating_rows}
         
         place_list: list[PlaceRecommendation] = []
+        
+        thumbnail_url = None
+        if place.thumbnail and isinstance(place.thumbnail, str) and place.thumbnail.strip():
+            thumbnail_url = s3_service.generate_view_presigned_url(place.thumbnail)
 
         for place, _score in top_places:
             avg_rating, review_count = place_stats.get(place.id, (0.0, 0))
@@ -229,7 +233,7 @@ def recommend_by_location(
                     id=place.id,
                     name=place.name,
                     isLiked=place.id in top_liked_ids,
-                    thumbnail=place.thumbnail,
+                    thumbnail=thumbnail_url,
                     rating=avg_rating,
                     reviewCount=review_count,
                     latitude=place.latitude,
