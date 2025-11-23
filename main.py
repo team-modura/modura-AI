@@ -186,7 +186,7 @@ def recommend_by_location(
             cf_score = cf_candidates.get(place.id, 0.0)
 
             # Hybrid (거리 70%, CF 30%)
-            final_score = cf_score * 0.3 + dist_score * 0.7
+            final_score = cf_score * 0.6 + dist_score * 0.4
             result.append((place, final_score))
 
         # 점수 내림차순 정렬
