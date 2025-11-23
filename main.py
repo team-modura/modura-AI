@@ -221,12 +221,13 @@ def recommend_by_location(
         
         place_list: list[PlaceRecommendation] = []
         
-        thumbnail_url = None
-        if place.thumbnail and isinstance(place.thumbnail, str) and place.thumbnail.strip():
-            thumbnail_url = s3_service.generate_view_presigned_url(place.thumbnail)
 
         for place, _score in top_places:
             avg_rating, review_count = place_stats.get(place.id, (0.0, 0))
+            
+            thumbnail_url = None
+            if place.thumbnail and isinstance(place.thumbnail, str) and place.thumbnail.strip():
+                thumbnail_url = s3_service.generate_view_presigned_url(place.thumbnail)
             
             place_list.append(
                 PlaceRecommendation(
