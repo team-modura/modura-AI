@@ -24,13 +24,20 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Set image tag
+        id: vars
+        run: echo "IMAGE_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
           context: .
           push: true
           no-cache: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/modura-ai:latest
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/modura-ai:latest
+            ${{ secrets.DOCKER_USERNAME }}/modura-ai:${{ steps.vars.outputs.IMAGE_TAG }}
+
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -40,11 +47,18 @@ jobs:
           script: |
             docker stop modura-ai || true
             docker rm modura-ai || true
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/modura-ai:latest || true
+
             docker pull ${{ secrets.DOCKER_USERNAME }}/modura-ai:latest
-            docker run -d -p 8000:8000 --name modura-ai \
+            docker run -d \
+              -p 8000:8000 \
+              --name modura-ai \
+              --restart unless-stopped \
               -e DB_HOST=${{ secrets.DB_HOST }} \
               -e DB_PORT=${{ secrets.DB_PORT }} \
               -e DB_USER=${{ secrets.DB_USER }} \
               -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
               -e DB_NAME=${{ secrets.DB_NAME }} \
               ${{ secrets.DOCKER_USERNAME }}/modura-ai:latest
+
+            docker image prune -af
