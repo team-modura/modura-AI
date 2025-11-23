@@ -94,6 +94,7 @@ class Place(Base):
     name = Column(String(255), nullable=False)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
+    thumbnail = Column(Text, nullable=True)
     
     # 관계
     likes = relationship("UserPlaceLikes", back_populates="place")
