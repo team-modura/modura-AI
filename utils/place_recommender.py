@@ -13,18 +13,17 @@ from models.db_models import (
 )
 
 class PlaceCFRecommender:
-    def __init__(self, db: Session):
-        self.db = db
+    def __init__(self):
         self.model = None
         self.dataset = None
         self.user_map = {}
         self.item_map = {}
-        self._build_model()
+       
 
-    def _build_model(self):
-        users = self.db.query(User).all()
-        places = self.db.query(Place).all()
-        interactions = self.db.query(UserPlaceLikes).all()
+    def build_model(self, db: Session):
+        users = db.query(User).all()
+        places = db.query(Place).all()
+        interactions = db.query(UserPlaceLikes).all()
 
         if not users or not places:
             print("Place CF: 데이터 부족")

@@ -4,7 +4,7 @@ from utils.helpers import distance_to_score, geocode
 from utils.place_recommender import PlaceCFRecommender, batch_distance
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from utils.database import get_db, engine
+from utils.database import SessionLocal, get_db, engine
 from models.db_models import Base, User, Content, UserContentLikes, UserPlaceLikes, Place, ContentPlace, PlaceReviews
 from models.models import RecommendationResponse, ContentRecommendation, MapRecommendationResponse, PlaceRecommendation
 from utils.recommender import LightFMRecommender
@@ -24,18 +24,8 @@ place_recommender = None
 @app.on_event("startup")
 async def startup_event():
     global recommender, place_recommender
-    db = next(get_db())
-    try:
-        recommender = LightFMRecommender(db)
-        place_recommender = PlaceCFRecommender(db)
-    except Exception as e:
-        print(f"❌ Failed to initialize recommenders: {e}")
-        import traceback
-        traceback.print_exc()
-        recommender = None
-        place_recommender = None
-    finally:
-        db.close()
+    recommender = LightFMRecommender()
+    place_recommender = PlaceCFRecommender()
 
         
 @app.get("/")
@@ -260,14 +250,5 @@ def retrain_model(db: Session = Depends(get_db)):
     """
     추천 모델 재학습 (관리자용 엔드포인트)
     """
-    global recommender, place_recommender
-    try:
-        recommender = LightFMRecommender(db)
-        place_recommender = PlaceCFRecommender(db)
-        return {"message": "Model retrained successfully"}
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Retraining failed: {str(e)}"
-        )
+    recommender.build_model(db)
     
