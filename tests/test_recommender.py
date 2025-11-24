@@ -105,8 +105,8 @@ def test_lightfm_recommender_train_and_predict(mock_db):
     assert recommender.model is not None
 
  
-    recs = recommender.predict_for_user(1, n_items=5)
-
+    recs = recommender.predict_for_user(mock_db, user_id=1, n_items=5)
+    
     assert isinstance(recs, list)
     assert len(recs) >= 0 
     
