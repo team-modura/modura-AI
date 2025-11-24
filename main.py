@@ -64,6 +64,7 @@ def recommend_content(user_id: int, db: Session = Depends(get_db)):
     try:
         # 하이브리드 추천 수행
         recommendations = recommender.get_hybrid_recommendations(
+            db=db,
             user_id=user_id,
             n_recommendations=10,
             include_liked_info=True
