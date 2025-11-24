@@ -99,8 +99,8 @@ def test_lightfm_recommender_train_and_predict(mock_db):
     """
     LightFMRecommender 학습 & 예측이 정상적으로 작동하는지 테스트
     """
-    recommender = LightFMRecommender(db=mock_db)
-
+    recommender = LightFMRecommender()
+    recommender.build_model(mock_db)
    
     assert recommender.model is not None
 
